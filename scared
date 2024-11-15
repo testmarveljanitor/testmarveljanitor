@@ -1,0 +1,58 @@
+-- Animation oluşturuluyor
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://180612465"  -- Animasyon ID'si
+local track = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+
+-- Animasyonun aktif olup olmadığını kontrol etmek için bir flag
+local ScaredACTIVE = false
+local positionFrozen = false  -- Pozisyonun sabit olup olmadığını kontrol eden flag
+local frozenTimePosition = 0  -- Pozisyonu saklamak için kullanılan değişken
+
+-- UserInputService ile tuşa basma kontrolü
+local UserInputService = game:GetService("UserInputService")
+
+-- V tuşuna basıldığında animasyonu başlat/durdur
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+    
+    -- Eğer doğru tuşa basıldıysa
+    if input.UserInputType == Enum.UserInputType.Keyboard then
+        if input.KeyCode == Enum.KeyCode.V then  -- Burada R yerine V kullanıyoruz
+            if not ScaredACTIVE then
+                -- Animasyon başlatılıyor
+                ScaredACTIVE = true
+                track:Play(0.1, 1, 1)  -- Animasyonu başlat (yavaşlık, hız, yoğunluk)
+                wait(1)  -- 1 saniye bekle
+                frozenTimePosition = track.TimePosition  -- Animasyonun mevcut pozisyonunu al
+                track:Stop()  -- Animasyonu durdur
+                track:Play(0, 1, 0)  -- Animasyonu başlat (ama hız 0 olacak)
+                track:AdjustSpeed(0)  -- Hızı sıfırlayarak animasyonu duraklatıyoruz
+                positionFrozen = true  -- Pozisyonu sabit yap
+            else
+                -- Eğer animasyon aktifse, durdurulacak
+                ScaredACTIVE = false
+                positionFrozen = false
+                track:Stop()  -- Animasyonu tamamen durdur
+                -- Animasyon sıfırlanacak, ayaklanma pozisyonuna geçeceğiz.
+                game.Players.LocalPlayer.Character.Humanoid:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 0))
+            end
+        elseif input.KeyCode == Enum.KeyCode.Space and positionFrozen then
+            -- Space tuşuna basıldığında kalkma işlemi yapılacak
+            ScaredACTIVE = false
+            positionFrozen = false
+            track:Stop()  -- Animasyonu tamamen durdur
+            -- Karakteri yukarıya doğru hareket ettirerek kalkmasını sağla
+            game.Players.LocalPlayer.Character.Humanoid:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 0))
+        end
+    end
+end)
+
+-- Sürekli kontrol, animasyonun pozisyonunu sabit tutmak
+while true do
+    wait(0.1)
+    if positionFrozen then
+        -- Pozisyon sabitlendiği durumda, animasyonu duraklatıyoruz ve pozisyonda tutuyoruz
+        track.TimePosition = frozenTimePosition  -- Animasyonu sabit pozisyonda tut
+    end
+end
