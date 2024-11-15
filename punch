@@ -30,7 +30,7 @@ UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
     
     -- Klavye tuşu kontrolü (R tuşu bırakıldığında)
-    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.V then
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
         if SuperPunchACTIVE then
             track:Stop()  -- Animasyonu durdur
             SuperPunchACTIVE = false  -- Animasyonu durdur
