@@ -1,0 +1,51 @@
+-- Animation oluşturuluyor
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://126753849"  -- Animasyon ID'sini buraya koyun
+local track = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+
+-- Animasyonun aktif olup olmadığını belirten flag
+local SuperPunchACTIVE = false
+
+-- UserInputService ile tuşa basma kontrolü
+local UserInputService = game:GetService("UserInputService")
+
+-- Keybind (R tuşu) basılı tutma kontrolü
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+    
+    -- Klavye tuşu kontrolü (R tuşu basıldığında)
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
+        -- Eğer animasyon başlamamışsa başlat
+        if not SuperPunchACTIVE then
+            SuperPunchACTIVE = true  -- Animasyonu aktif et
+            track:Play(0.1, 1, 3)  -- Animasyonu başlat (yavaşlık, hız, yoğunluk)
+        end
+    end
+end)
+
+-- R tuşu bırakıldığında animasyonu durdurma
+UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+    
+    -- Klavye tuşu kontrolü (R tuşu bırakıldığında)
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.V then
+        if SuperPunchACTIVE then
+            track:Stop()  -- Animasyonu durdur
+            SuperPunchACTIVE = false  -- Animasyonu durdur
+        end
+    end
+end)
+
+-- R tuşu basılı tutulduğunda animasyonun devam etmesini sağlamak
+while true do
+    wait(0.1)  -- Sürekli kontrol et
+    if SuperPunchACTIVE then
+        -- Eğer R tuşuna basılı tutuluyorsa animasyon devam etsin
+        if not track.IsPlaying then
+            -- Animasyonu her zaman düzgün hızda başlatmak için tekrardan başlatıyoruz
+            track:Play(0.1, 1, 3)  -- Yavaşlık, hız, yoğunluk
+        end
+    end
+end
