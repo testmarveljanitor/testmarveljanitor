@@ -1,0 +1,31 @@
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://33796059"  -- Animasyon ID'si
+local track = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+
+local InsaneACTIVE = false
+local UserInputService = game:GetService("UserInputService")
+
+-- M tuşuna basıldığında animasyonu başlat/durdur
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+    
+    -- Eğer doğru tuşa basıldıysa
+    if input.UserInputType == Enum.UserInputType.Keyboard then
+        if input.KeyCode == Enum.KeyCode.M then  -- Burada M tuşunu kullanıyoruz
+            if not InsaneACTIVE then
+                -- Animasyonu başlatıyoruz
+                InsaneACTIVE = true
+                track:Play(0.1, 1, 1e8)  -- Animasyonu başlat (yavaşlık, hız, yoğunluk)
+                -- İstenirse GUI'nin rengini değiştirebilirsiniz, örneğin:
+                -- Insane.BackgroundColor3 = loc  -- Burada 'loc' değişkenini kullanarak rengini değiştirebilirsiniz
+            else
+                -- Animasyon durduruluyor
+                InsaneACTIVE = false
+                track:Stop()  -- Animasyonu tamamen durdur
+                -- GUI'yi eski rengine döndürebilirsiniz, örneğin:
+                -- Insane.BackgroundColor3 = col  -- 'col' ile eski rengi ayarlayabilirsiniz
+            end
+        end
+    end
+end)
