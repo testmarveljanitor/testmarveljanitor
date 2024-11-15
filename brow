@@ -1,0 +1,26 @@
+local UserInputService = game:GetService("UserInputService")
+
+-- Animasyonu tanımla
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://204292303"  -- Animasyon ID'si
+
+-- Animasyonu yükle
+local track = game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):LoadAnimation(Anim)
+
+-- Animasyon aktif mi değil mi kontrolü
+local BowDownACTIVE = false
+
+-- Tuşa basılınca animasyonu başlat
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end  -- Oyun tarafından işlenen input'ları geç
+
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.B then
+        BowDownACTIVE = not BowDownACTIVE
+        if BowDownACTIVE then
+            -- Animasyonu başlat (yavaşlatmak için hız parametresini 0.5 yapalım)
+            track:Play(0.1, 1, 0.5)  -- 0.5 animasyon hızını yavaşlatır
+        else
+            track:Stop()  -- Animasyonu durdur
+        end
+    end
+end)
