@@ -1,0 +1,49 @@
+-- Animasyonu yükleme
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://184574340"  -- Animasyon ID'sini buraya koyun
+local track = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+
+-- Başlangıçta animasyon duracak
+local MegaInsaneACTIVE = false
+
+-- UserInputService ile tuş kontrolü
+local UserInputService = game:GetService("UserInputService")
+
+-- R tuşuna basıldığında animasyonu başlat/durdur
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+
+    -- R tuşu kontrolü
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.X then
+        if not MegaInsaneACTIVE then
+            -- Animasyon başlatılıyor
+            MegaInsaneACTIVE = true
+            track:Play(0.1, 0.5, 40)  -- Animasyonu başlat (yavaşlık, hız, yoğunluk)
+        end
+    end
+end)
+
+-- R tuşu bırakıldığında animasyonu durdurma
+UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+
+    -- R tuşu bırakıldığında animasyonu durdur
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.X then
+        if MegaInsaneACTIVE then
+            track:Stop()  -- Animasyonu durdur
+            MegaInsaneACTIVE = false
+        end
+    end
+end)
+
+-- Animasyon sürekli kontrol
+while true do
+    wait(0.1)  -- Sürekli kontrol et
+    if MegaInsaneACTIVE then
+        -- Eğer animasyon oynuyorsa, tekrar başlatıyoruz (sürekli devam etsin)
+        if not track.IsPlaying then
+            track:Play(0.1, 0.5, 40)
+        end
+    end
+end
