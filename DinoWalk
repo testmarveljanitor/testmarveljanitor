@@ -1,0 +1,40 @@
+-- İlk Animasyon: DinoWalk
+local DinoAnim = Instance.new("Animation")
+DinoAnim.AnimationId = "rbxassetid://204328711"
+local DinoTrack = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(DinoAnim)
+local DinoWalkACTIVE = false
+
+-- İkinci Animasyon: LoopHead
+local HeadAnim = Instance.new("Animation")
+HeadAnim.AnimationId = "rbxassetid://35154961"
+local HeadTrack = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(HeadAnim)
+local LoopHeadACTIVE = false
+
+-- UserInputService ile Q tuşuna basma kontrolü
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+    
+    -- Eğer doğru tuşa basıldıysa (Q tuşu)
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Q then
+        -- DinoWalk animasyonunu kontrol et
+        if not DinoWalkACTIVE then
+            DinoWalkACTIVE = true
+            DinoTrack:Play(0.1, 1, 1)  -- Animasyonu başlat
+        else
+            DinoWalkACTIVE = false
+            DinoTrack:Stop()  -- Animasyonu durdur
+        end
+
+        -- LoopHead animasyonunu kontrol et
+        if not LoopHeadACTIVE then
+            LoopHeadACTIVE = true
+            HeadTrack:Play(0.5, 1, 1e6)  -- Animasyonu başlat
+        else
+            LoopHeadACTIVE = false
+            HeadTrack:Stop()  -- Animasyonu durdur
+        end
+    end
+end)
