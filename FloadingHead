@@ -1,0 +1,32 @@
+-- Animation oluşturuluyor
+local Anim = Instance.new("Animation")
+Anim.AnimationId = "rbxassetid://121572214"
+local track = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+
+-- Animasyonun aktif olup olmadığını kontrol etmek için bir flag
+local FloatingHeadACTIVE = false
+
+-- UserInputService ile Y tuşuna basma kontrolü
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    -- Eğer oyun işleniyorsa, giriş işlemi yapılmasın
+    if gameProcessedEvent then return end
+
+    -- Eğer doğru tuşa basıldıysa
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Y then
+        -- Animasyonu başlat/durdur
+        FloatingHeadACTIVE = not FloatingHeadACTIVE
+        if FloatingHeadACTIVE then
+            -- Animasyonu başlat
+            track:Play(0.1, 1, 1)
+            -- Background rengini değiştir
+            FloatingHead.BackgroundColor3 = loc
+        else
+            -- Animasyonu durdur
+            track:Stop()
+            -- Background rengini geri al
+            FloatingHead.BackgroundColor3 = col
+        end
+    end
+end)
